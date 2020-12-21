@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t astanton/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true USERNAME/react-test npm test
+
+after_success:
+  - docker build -t astanton/multi-client-udemy ./client
+  - docker build -t astanton/multi-server-udemy ./server
+  - docker build -t astanton/multi-nginx-udemy ./nginx
+  - docker build -t astanton/multi-worker-udemy ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push astanton/multi-client-udemy
+  - docker push astanton/multi-server-udemy
+  - docker push astanton/multi-nginx-udemy
+  - docker push astanton/multi-worker-udemy
