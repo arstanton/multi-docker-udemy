@@ -18,3 +18,15 @@ after_success:
   - docker push astanton/multi-server-udemy
   - docker push astanton/multi-nginx-udemy
   - docker push astanton/multi-worker-udemy
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'us-east-2'
+  app: 'multi-docker-udemy'
+  env: 'MultiDocker-env'
+  bucket_name: 'elasticbeanstalk-us-east-2-299801970880'
+  bucket_path: 'docker-multi'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
